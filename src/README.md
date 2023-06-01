@@ -1,13 +1,26 @@
 # Panther Workout Tracker
 - Backend Rest API for Panther Workout Tracker
+
 # Demo
+- Youtube Demo come here
 
 
 # Features
 
+# Architectural Diagram
+- Lowlevel Design
+  - Entity Relationships Design
+- Highlevel Design
+  - AWS 
+
 
 # Technology Stack
 Java, SpringBoot,  Spring Data JPA, MySQL
+
+# Installing Locally
+- clone the project
+- setup credentials in application.properties
+- update maven
 
 # GitHub Branching Workflow
 ```
@@ -26,3 +39,13 @@ $ git push --set-upstream origin <feature/name>
 6 ) let a teammeber review your code and approve it
 
 ```
+
+# Coding Style Guide
+
+https://google.github.io/styleguide/javaguide.html
+
+# Author
+- Eric Sei
+- Gavin
+- Jess
+- Jesus
