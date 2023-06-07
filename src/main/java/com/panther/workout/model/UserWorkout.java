@@ -9,17 +9,19 @@ import java.util.Objects;
 @Table(name = "User_Workout")
 public class UserWorkout implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 49218008973560624L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "User_id")
+  Integer userId;
 
-    @ManyToOne
-    @JoinColumn(name = "workout_id", referencedColumnName = "id")
-    Integer workoutId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "Workout_id")
+  Integer workoutId;
 
     @Column(name = "workout_date")
     Date workoutDate;

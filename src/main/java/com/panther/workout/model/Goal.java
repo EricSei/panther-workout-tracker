@@ -3,15 +3,15 @@ package com.panther.workout.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
@@ -39,9 +39,9 @@ private static final long serialVersionUID = 1L;
 
 	//user id relationship with goals
 
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn( name = "user_id", referencedColumnName = "id")
+//	@JsonIgnore
+//	@ManyToOne
+//	@JoinColumn( name = "user_id", referencedColumnName = "id")
 	private User user_id; //need to implement the User model
 
 
