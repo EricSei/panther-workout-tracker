@@ -59,6 +59,7 @@ tmp/
 *.swp
 *~.nib
 local.properties
+application.properties
 .loadpath
 .factorypath
 
@@ -83,3 +84,4 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
+src/main/java/resources/application.yml
