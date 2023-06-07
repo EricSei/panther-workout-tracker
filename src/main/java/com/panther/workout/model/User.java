@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,11 @@ public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static enum Role {
+		ROLE_USER, ROLE_ADMIN
+	}
+	
+	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY  )
 	private Integer id;
@@ -27,6 +34,9 @@ public class User implements Serializable {
 	@NotNull
 	private String password;
 	
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	
 	@Column()
 	private int rewardPoints;
 
@@ -34,11 +44,12 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(Integer id, String username, @NotNull String password, int rewardPoints) {
+	public User(String username, @NotNull String password, Role role, int rewardPoints) {
 		super();
-		this.id = id;
+		this.id = null;
 		this.username = username;
 		this.password = password;
+		this.role = role;
 		this.rewardPoints = rewardPoints;
 	}
 
@@ -66,6 +77,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	public int getRewardPoints() {
 		return rewardPoints;
 	}
@@ -80,9 +99,11 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", rewardPoints=" + rewardPoints
-				+ "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role
+				+ ", rewardPoints=" + rewardPoints + "]";
 	}
+
+	
 	
 	
 	
