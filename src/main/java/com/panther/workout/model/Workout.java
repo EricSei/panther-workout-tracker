@@ -1,12 +1,11 @@
 package com.panther.workout.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "Workout")
 public class Workout implements Serializable {
 
     @Id

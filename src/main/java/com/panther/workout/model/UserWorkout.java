@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
+@Entity
+@Table(name = "User_Workout")
 public class UserWorkout implements Serializable {
 
     @Id
