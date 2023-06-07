@@ -13,11 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-//Goal
-//( [ begin_date , end_date] , 
-//numberOfWorkout Per week
-//calories burn ( typeofworkout x times per week )
-//attribute may not required
 
 
 @Entity
