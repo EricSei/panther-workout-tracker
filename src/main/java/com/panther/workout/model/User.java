@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,11 @@ public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static enum Role {
+		ROLE_USER, ROLE_ADMIN
+	}
+	
+	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY  )
 	private Integer id;
@@ -27,6 +34,12 @@ public class User implements Serializable {
 	@NotNull
 	private String password;
 	
+	@Column( columnDefinition = "boolean default true" )
+	private boolean enabled; // true or false if the user is enabled
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	
 	@Column()
 	private int rewardPoints;
 
@@ -34,11 +47,13 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(Integer id, String username, @NotNull String password, int rewardPoints) {
+	public User(Integer id, String username, @NotNull String password, boolean enabled, Role role, int rewardPoints) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.enabled = enabled;
+		this.role = role;
 		this.rewardPoints = rewardPoints;
 	}
 
@@ -66,6 +81,22 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	public int getRewardPoints() {
 		return rewardPoints;
 	}
@@ -80,9 +111,12 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", rewardPoints=" + rewardPoints
-				+ "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
+				+ ", role=" + role + ", rewardPoints=" + rewardPoints + "]";
 	}
+
+	
+	
 	
 	
 	
