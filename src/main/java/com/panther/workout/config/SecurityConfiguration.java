@@ -1,23 +1,29 @@
 package com.panther.workout.config;
 
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.panther.workout.filter.JwtRequestFilter;
 
-@EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+// JWT Example
+@Configuration
+public class SecurityConfiguration {
 	
 	@Autowired
 	UserDetailsService userDetailsService;
@@ -25,59 +31,89 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	JwtRequestFilter jwtRequestFilter;
 	
-	@Override
-	protected void configure( AuthenticationManagerBuilder auth) throws Exception {
+	// Authentication - who are you?
+	@Bean
+	protected UserDetailsService userDetailsService() {
 		
-		auth.userDetailsService(userDetailsService);
-		
+		return userDetailsService;
 	}
 	
-	// Authorization ( what do you want)
-	// which user have access to which uris (APIs)
-	@Override
-	protected void configure( HttpSecurity http) throws Exception{
-		
-		// more specific authorization on top and 
-		// broader specification on the bottom
-		
-		// if creating an ADMIN type user, makes sure to put them in every antMatcher(), so they get access
+	// Authorization - what do you want?
+	@Bean
+	protected SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
 		
 		http.csrf().disable()
 			.authorizeRequests()
-			// all auth routes
-			.antMatchers( HttpMethod.GET, 	"/api/health").permitAll()		
-			.antMatchers( HttpMethod.POST,  "/api/register").permitAll() //sign up
-			.antMatchers( HttpMethod.POST,  "/api/authenticate").permitAll() // sign in
-			//all users route
-			.antMatchers( HttpMethod.PUT, 	 "/api/user/**").hasAnyRole("USER", "ADMIN") 
-			.antMatchers( HttpMethod.GET, 	 "/api/user/**").hasAnyRole("USER", "ADMIN")
-			.antMatchers( HttpMethod.DELETE, "/api/user/**").hasAnyRole("USER", "ADMIN")
-			.antMatchers( HttpMethod.GET, 	 "/api/user").hasRole("ADMIN")
-			.antMatchers( HttpMethod.GET, 	"/v3/api-docs/").hasAnyRole("USER", "ADMIN")//swagger
-			.antMatchers("/**").hasRole("ADMIN")//Admin User all access
-			.anyRequest().authenticated()
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			.antMatchers("/api/hello").hasRole("USER")
+			.antMatchers("/api/admin").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN") // don't want just anyone to be able to get all user info
+			.antMatchers("/api/all").permitAll()
+			.antMatchers(HttpMethod.POST, "/authenticate").permitAll() //sign in , will return token
+			.antMatchers(HttpMethod.POST, "/api/users").permitAll() // anyone can create a user
+			.antMatchers("/api/health").permitAll()
+			.anyRequest().authenticated()						   // if not specified, all other end points need a user login
+			.and()
+			.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
 		
-			http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-			
-			http.cors();
+		// this request will go through many filters, make sure that the FIRST filter that is checked is
+		// the filter for jwts, in order to make sure of that, the filter has to be checked before you check the 
+		// username & password (filter)
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		
+		return http.build();
 	}
 	
-	// mainly used to decode passwords
+	
+	// Encoder -> method that will encode/decode all the user passwords
 	@Bean
-	public PasswordEncoder passwordEncoder() {
-		// when password is going to be encoded and decoded, don't user any encode, the password should be clean
-//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	protected PasswordEncoder encoder() {
 		
-		// create no password encoder, old way of setting it up, still works just deprecated
+		// plain text encoder -> won't do any encoding
 		//return NoOpPasswordEncoder.getInstance();
 		
-		// BCrypt encoder to do proper encoding ( very simple to set up and can use others in a similar way)
-		return new BCryptPasswordEncoder();
+		// there's many options for password encoding, just pick a algorithm that you like
+		return new BCryptPasswordEncoder(); 
 	}
 	
+	// load the encoder & user details service that are needed for spring security to do authentication
 	@Bean
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
+	protected DaoAuthenticationProvider authenticationProvider() {
+		
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder( encoder() );
+		
+		return authProvider;
 	}
+	
+	// can autowire and access the authentication manager (manages authentication login) of our project)
+	@Bean
+	protected AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+		return authConfig.getAuthenticationManager();
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

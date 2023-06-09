@@ -1,7 +1,5 @@
 package com.panther.workout.filter;
 
-
-
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -13,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.panther.workout.service.MyUserDetailsService;
 import com.panther.workout.util.JwtUtil;
 
 
@@ -33,7 +31,7 @@ import com.panther.workout.util.JwtUtil;
 public class JwtRequestFilter extends OncePerRequestFilter { // abstract class that makes sure an action performed once when filter is called
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private MyUserDetailsService userDetailsService;
 	
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -94,3 +92,16 @@ public class JwtRequestFilter extends OncePerRequestFilter { // abstract class t
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

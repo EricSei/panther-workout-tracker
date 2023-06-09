@@ -1,14 +1,24 @@
 package com.panther.workout.model;
 
-public class AuthenticationResponse {
+import java.io.Serializable;
+
+public class AuthenticationResponse implements Serializable {
 	
-	private final String jwt;
+private static final long serialVersionUID = 1L;
+	
+	
+	private String jwt;
+	
 	public AuthenticationResponse(String jwt) {
 		this.jwt = jwt;
 	}
-	
+
 	public String getJwt() {
 		return jwt;
+	}
+
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
 	}
 
 }

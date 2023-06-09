@@ -12,24 +12,33 @@ import com.panther.workout.model.User;
 import com.panther.workout.repository.UserRepository;
 
 
+
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 	
 	@Autowired
 	UserRepository repo;
 
+	
+	// method will by called by Spring Security when a request comes in
+	// credentials (username + password) passed through the request will be loaded in
+	// username will be passed to this method (as an argument), then will call the UserRepository in order to find a user with that username
+	// As long as this user is found, User info will be passed to a UserDetails object and returned
+		
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> userfound = repo.findByUsername( username );
 		
-		// if we could not find the user, throw username not found exception
-		if( userfound.isEmpty()) {
+		Optional<User> userFound = repo.findByUsername(username);
+		
+		// if username doesn't exist in the table, throw an exception
+		if(userFound.isEmpty()) {
 			throw new UsernameNotFoundException(username);
 		}
 		
-		// the user details will be returned to spring security, and these details will be all the info needed to perform authentication and authorization
-		
-		return new MyUserDetails( userfound.get());
+		// as long as we found the user, create a user details object with all the relevant info for security 
+		// security will take this object and perform authorization & authentication
+		return new MyUserDetails( userFound.get() );
 	}
 
 }

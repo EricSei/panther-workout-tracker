@@ -21,9 +21,9 @@ import com.panther.workout.model.User;
 import com.panther.workout.repository.UserRepository;
 import com.panther.workout.service.UserService;
 
+@RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
-@RestController
 public class UserController {
 	
 	@Autowired
@@ -36,13 +36,14 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@PostMapping("/register")
-	public ResponseEntity<?> createUser(@Valid @RequestBody User user) throws Exception{
-		
-		User created = userService.createUser(user);
-		
-		return ResponseEntity.status(201).body(created);
-	}
+//	@PostMapping("/register")
+//	public ResponseEntity<?> createUser(@Valid @RequestBody User user) throws Exception{
+//		
+//		User created = userService.createUser(user);
+//		
+//		return ResponseEntity.status(201).body(created);
+//		
+//	}
 	
 	@GetMapping("/user/authenticated/details")
 	public ResponseEntity<?> getUserDetails(HttpServletRequest request) throws Exception{
@@ -62,7 +63,7 @@ public class UserController {
 		
 	}
 	
-	@PostMapping("/users/authenticate")
+	@PostMapping("/users")
 	public ResponseEntity<?> authenticate(@RequestBody User user){
 		user.setId(null);
 		// use a password encoder to encode the password so it is not saved as plain text in the database

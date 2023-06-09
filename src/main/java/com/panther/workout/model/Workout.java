@@ -8,7 +8,7 @@ import java.util.Objects;
 @Table(name = "Workout")
 public class Workout implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; //why ?
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

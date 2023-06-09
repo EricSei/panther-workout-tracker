@@ -34,6 +34,9 @@ public class User implements Serializable {
 	@NotNull
 	private String password;
 	
+	@Column( columnDefinition = "boolean default true" )
+	private boolean enabled; // true or false if the user is enabled
+	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
@@ -44,11 +47,12 @@ public class User implements Serializable {
 		super();
 	}
 
-	public User(String username, @NotNull String password, Role role, int rewardPoints) {
+	public User(Integer id, String username, @NotNull String password, boolean enabled, Role role, int rewardPoints) {
 		super();
-		this.id = null;
+		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.enabled = enabled;
 		this.role = role;
 		this.rewardPoints = rewardPoints;
 	}
@@ -77,6 +81,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public Role getRole() {
 		return role;
 	}
@@ -99,10 +111,11 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role
-				+ ", rewardPoints=" + rewardPoints + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
+				+ ", role=" + role + ", rewardPoints=" + rewardPoints + "]";
 	}
 
+	
 	
 	
 	
