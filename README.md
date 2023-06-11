@@ -9,7 +9,7 @@
 # Architectural Diagram
 - Lowlevel Design
   - Entity Relationships Design
- ![alt text](https://github.com/ericsei/panther-workout-tracker/blob/main/assets/image.jpg?raw=true)
+ ![alt text](https://github.com/ericsei/panther-workout-tracker/blob/main/assets/data_model_diagram.png?raw=true)
 - Highlevel Design
   - AWS 
 
