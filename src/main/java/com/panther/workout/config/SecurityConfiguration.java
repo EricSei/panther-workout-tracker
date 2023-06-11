@@ -1,8 +1,6 @@
 package com.panther.workout.config;
 
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,20 +36,28 @@ public class SecurityConfiguration {
 		return userDetailsService;
 	}
 	
-	// Authorization - what do you want?
+	// Authorization - what do you want?Ø
 	@Bean
 	protected SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
 		
-		http.csrf().disable()
+		http.csrf()
+			.disable()
 			.authorizeRequests()
+			// Admin Routers
 			.antMatchers("/api/hello").hasRole("USER")
 			.antMatchers("/api/admin").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/api/users").hasAnyRole("ADMIN" , "USER")
 			.antMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN") // don't want just anyone to be able to get all user info
-			.antMatchers("/api/all").permitAll()
-			.antMatchers(HttpMethod.POST, "/authenticate").permitAll() //sign in , will return token
-			.antMatchers(HttpMethod.POST, "/api/users").permitAll() // anyone can create a user
-			.antMatchers("/api/health").permitAll()
-			.anyRequest().authenticated()						   // if not specified, all other end points need a user login
+			// Goals Routes
+			.antMatchers(HttpMethod.GET, "/api/user/goals").hasAnyRole("ADMIN" , "USER") //Get Goals of Current Authenticated user
+			.antMatchers(HttpMethod.POST, "/api/user/goals").hasAnyRole("ADMIN" , "USER") // Post A Goal of Authenticated User
+			
+			//Public Rotuers
+			.antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()  //Sign In, will return token
+			.antMatchers(HttpMethod.POST, "/api/users").permitAll() 	//Sign Up a user
+			.antMatchers(HttpMethod.GET, "/api/heallo").hasAnyRole("ADMIN" , "USER")
+			.antMatchers("/api/health").permitAll()						// Get Health
+			.anyRequest().authenticated()						   		// if not specified, all other end points need a user login
 			.and()
 			.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
 		

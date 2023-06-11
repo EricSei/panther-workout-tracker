@@ -2,14 +2,14 @@
 - Backend Rest API for Panther Workout Tracker
 
 # Demo
-- Youtube Demo come here
-
+- Demo Links 
 
 # Features
 
 # Architectural Diagram
 - Lowlevel Design
   - Entity Relationships Design
+ ![Entity Relationships Design ](https://github.com/ericsei/panther-workout-tracker/blob/main/assets/data_model_diagram.png?raw=true)
 - Highlevel Design
   - AWS 
 
@@ -69,11 +69,54 @@ $ git push --set-upstream origin <feature/name>
 
 ```
 
+# API Call Examples with JWT
+
+```
+Method : Post
+URL : http://localhost:8080/api/authenticate 
+Request Body
+{
+    "username" : "ryan",
+    "password" : "ryan@123"
+   
+}
+
+Response Body : 
+
+{
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyeWFuIiwiZXhwIjoxNjg2NTU3NjExLCJpYXQiOjE2ODY1MjE2MTF9.11QG6CkjlPnUFYpbotFzHKSSY7snt3ChixFAS9oOsKs"
+}
+
+Set Autorization, Bearer Token
+
+Token : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyeWFuIiwiZXhwIjoxNjg2NTU3NjExLCJpYXQiOjE2ODY1MjE2MTF9.11QG6CkjlPnUFYpbotFzHKSSY7snt3ChixFAS9oOsKs
+http://localhost:8080/api/goals
+
+Request Body: 
+
+{
+    
+    "startDate": "2023-06-11",
+    "endDate" : "2023-07-23",
+    "goalNum": 12
+
+}
+
+Response Body:
+{
+    "id": 1,
+    "startDate": "2023-06-11",
+    "endDate": "2023-07-23",
+    "goalNum": 12
+}
+
+```
+
 # Coding Style Guide
 
-https://google.github.io/styleguide/javaguide.html
+https://google.github.io/styleguide/javaguide.html 
 
-# Author
+# Authors
 - Eric Sei
 - Gavin
 - Jess
