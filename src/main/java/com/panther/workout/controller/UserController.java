@@ -1,5 +1,6 @@
 package com.panther.workout.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +62,11 @@ public class UserController {
 				.status(201)
 				.body(found.get());
 		
+	}
+	
+	@GetMapping("/users")
+	public List<User> getUsers( ){
+		return repo.findAll();
 	}
 	
 	@PostMapping("/users")

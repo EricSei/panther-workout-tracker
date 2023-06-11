@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -20,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="Goal")
 public class Goal implements Serializable{
 	
-private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -28,10 +30,12 @@ private static final long serialVersionUID = 1L;
 	
 	//start date - local data
 	@Column(nullable = false)
+	@JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate startDate;
 	
 	//end date - local date
 	@Column(nullable = false)
+	@JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate endDate;
 	
 	//workout goal # - integer
@@ -39,25 +43,24 @@ private static final long serialVersionUID = 1L;
 	private int goalNum;
 	
 
-	//user id relationship with goals
-
-//	@JsonIgnore
-//	@ManyToOne
-//	@JoinColumn( name = "user_id", referencedColumnName = "id")
-	private User user_id; //need to implement the User model
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn( name = "user_id", referencedColumnName = "id")
+	private User user;
 
 
 	public Goal() {
+		super();
 	}
 
 
-	public Goal(Integer id, LocalDate startDate, LocalDate endDate, int goalNum, User user_id) {
+	public Goal(Integer id, LocalDate startDate, LocalDate endDate, int goalNum, User user) {
 		super();
 		this.id = id;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.goalNum = goalNum;
-		this.user_id = user_id;
+		this.user = user;
 	}
 
 
@@ -101,20 +104,28 @@ private static final long serialVersionUID = 1L;
 	}
 
 
-	public User getUser_id() {
-		return user_id;
+	public User getUser() {
+		return user;
 	}
 
 
-	public void setUser_id(User user_id) {
-		this.user_id = user_id;
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Goal [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", goalNum=" + goalNum + "]";
+		return "Goal [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", goalNum=" + goalNum
+				+ ", user=" + user + "]";
 	}
+
+	
 	
 	
 	

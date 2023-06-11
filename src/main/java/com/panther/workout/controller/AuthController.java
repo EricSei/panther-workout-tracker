@@ -31,7 +31,7 @@ public class AuthController {
 	
 	// create the token at http://localhost:8080/authenticate 
 	// send the username & password and try to generate a token as a response
-	@PostMapping("/authenticate")
+	@PostMapping("api/authenticate")
 	public ResponseEntity<?> createJwtToken(@RequestBody AuthenticationRequest request) throws Exception {
 		
 		// try to catch the exception for bad credentials, just so we can set our own

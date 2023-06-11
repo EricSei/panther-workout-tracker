@@ -1,7 +1,12 @@
 package com.panther.workout.controller;
 
+
+
 import java.util.List;
 import java.util.Optional;
+
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.panther.workout.model.Goal;
+import com.panther.workout.model.User;
 import com.panther.workout.repository.GoalRepository;
+import com.panther.workout.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -24,13 +31,16 @@ public class GoalController {
 	@Autowired
 	private GoalRepository repo;
 	
-	@GetMapping("/userGoals")
-	public List<Goal> getAllUserGoals(){
+	@Autowired
+	UserService userService;
+	
+	@GetMapping("/goals")
+	public List<Goal> getGoals(){
 		return repo.findAll();
 	}
 	
 	
-	@GetMapping("/userGoals/{id}")
+	@GetMapping("/goals/{id}")
 	public ResponseEntity<Goal> getGoalById(@PathVariable Integer id) {
 		Optional<Goal> userGoal = repo.findById(id);
 		if (userGoal.isEmpty()) {
@@ -39,13 +49,25 @@ public class GoalController {
 		return ResponseEntity.status(200).body(userGoal.get());
 	}
 	
-	@PostMapping("/userGoals")
-	public ResponseEntity<Goal> createGoal(@RequestBody Goal userGoal) {
-		Goal created = repo.save(userGoal);
-		return new ResponseEntity<>(created, HttpStatus.CREATED);
+	@PostMapping("/goals")
+	public ResponseEntity<Goal> createGoal(@RequestBody Goal userGoal, HttpServletRequest request) throws Exception {
+		Optional<User> found = userService.getAuthenticatedUserDetail(request);
+		
+		if(found.isPresent()) {
+			User user = found.get();
+			userGoal.setId(null);
+			userGoal.setUser(user);
+		
+			Goal created = repo.save(userGoal);
+			return new ResponseEntity<>(created, HttpStatus.CREATED);
+		}
+		return ResponseEntity.status(401).body(null);
+		
 	}
 	
-	@PutMapping("/userGoals/{id}")
+	//Get all the Goals of A user
+	
+	@PutMapping("/goals/{id}")
 	public ResponseEntity<Goal> updateGoal(@PathVariable Integer id, @RequestBody Goal userGoal) {
 		Optional<Goal> existingGoal = repo.findById(id);
 		if (existingGoal.isEmpty()) {
@@ -55,7 +77,7 @@ public class GoalController {
 		return new ResponseEntity<Goal>(updated, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/userGoals/{id}")
+	@DeleteMapping("/goals/{id}")
 	public ResponseEntity<Void> deleteGoal(@PathVariable Integer id) {
 		Goal existingGoal = repo.findById(id).orElse(null);
 		if (existingGoal == null) {
